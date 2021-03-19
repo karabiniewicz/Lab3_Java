@@ -1,18 +1,27 @@
 package s180009.Lab2;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
 
 public class Main {
+    private static int threadNumber;
+
     public static void main(String[] args) {
-        int threadNumber = Integer.parseInt(args[0]);
+        if (args.length > 0 && !args[0].isEmpty()) {
+            threadNumber = Integer.parseInt(args[0]);
+        }
+        TaskResults taskResults = new TaskResults();
 
-        List<Integer> numbers = new ArrayList<>();
+        TaskService taskService = new TaskService(taskResults, threadNumber);
 
-        TaskService taskService = new TaskService();
+        System.out.println("Starting new session");
+        try {
+            taskService.generateTasks().join();
+            System.out.println("Session ends");
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
 
-        new ImportData(threadNumber).read(numbers);
+        new ExportData().write(taskResults);
 
-        new ExportData(threadNumber).write(numbers);
     }
 }
