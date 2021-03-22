@@ -2,17 +2,14 @@ package s180009.Lab2;
 
 import lombok.*;
 
-@Getter
-@ToString
-@Builder
+@Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor
-@EqualsAndHashCode
-public class Task implements Comparable<Task>{
-    private int value;
+@Builder
+public class Task{
+    private long value;
 
     @Override
-    public int compareTo(Task o) {
-        return Integer.compare(this.value, o.value);
+    public String toString() {
+        return String.valueOf(value);
     }
 }

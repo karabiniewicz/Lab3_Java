@@ -16,17 +16,17 @@ public class InputExecutor implements Runnable {
     @Override
     public void run() {
         Scanner s = new Scanner(System.in);
-        String s1 = "";
+        String input = "";
         while (!Thread.interrupted()) {
-            if (!s1.equals("exit") && s.hasNext()) {
-                s1 = s.next();
+            if (!input.equals("exit") && s.hasNext()) {
+                input = s.next();
                 int newNumber = 0;
                 try {
-                    newNumber = Integer.parseInt(s1);
+                    newNumber = Integer.parseInt(input);
                 } catch (NumberFormatException ex) {
-                    if (s1.equals("exit")) {
+                    if (input.equals("exit")) {
                         System.out.println("You try to exit the program!");
-                        while (!taskBoard.getTasks().isEmpty()){
+                        while (!taskBoard.isEmpty()){
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException e) {
@@ -39,10 +39,11 @@ public class InputExecutor implements Runnable {
                         newNumber = 0;
                     }
                 }
-                taskBoard.put(List.of(Task.builder().value(newNumber).build()));
-                System.out.println("Received: " + newNumber);
+                if (newNumber != 0) {
+                    taskBoard.put(List.of(Task.builder().value(newNumber).build()));
+                    System.out.println("Received: " + newNumber);
+                }
             }
         }
-        s.close();
     }
 }

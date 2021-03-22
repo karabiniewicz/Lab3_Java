@@ -7,11 +7,8 @@ public class TaskService {
 
     private int threadNumber;
 
-    private TaskResults taskResults;
-
-    public TaskService(TaskResults taskResults, int threadNumber ) {
+    public TaskService(int threadNumber) {
         this.threadNumber = threadNumber;
-        this.taskResults = taskResults;
     }
 
     public Thread generateTasks() {
@@ -19,27 +16,31 @@ public class TaskService {
         TaskBoard taskBoard = new TaskBoard();
         List<Thread> threads = new ArrayList<>();
         Object controlObject = new Object();
-        TaskExecutor taskExecutor = TaskExecutor.builder().taskBoard(taskBoard).taskResults(taskResults).build();
+        Object controlObject2 = new Object();
+
+        TaskExecutor taskExecutor = new TaskExecutor(taskBoard, controlObject2);
 
         new ImportData(threadNumber).read(taskBoard);
         for (int i = 0; i < threadNumber; ++i) {
             threads.add(new Thread(taskExecutor));
         }
 
-        InputExecutor inputExecutor = new InputExecutor(taskBoard, controlObject);
-        threads.add(new Thread(inputExecutor));
+        for (Thread thread : threads) {
+            thread.start();
+        }
+
+        Thread inputThread = new Thread(new Thread(new InputExecutor(taskBoard, controlObject)));
+        inputThread.start();
 
         Timeout timeout = Timeout.builder()
                 .threads(threads)
                 .controlObject(controlObject)
+                .controlObject2(controlObject2)
+                .inputThread(inputThread)
                 .build();
 
         Thread timeoutThread = new Thread(timeout);
         timeoutThread.start();
-
-        for (Thread thread : threads) {
-            thread.start();
-        }
 
         return timeoutThread;
     }

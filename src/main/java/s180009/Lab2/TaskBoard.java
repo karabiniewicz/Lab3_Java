@@ -14,13 +14,13 @@ public class TaskBoard {
         return tasks.remove(0);
     }
 
-    public synchronized List<Task> getTasks() {
-        return tasks;
-    }
-
     public synchronized void put(List<Task> quests) {
         this.tasks.addAll(quests);
         notifyAll();
+    }
+
+    public synchronized Boolean isEmpty(){
+        return this.tasks.isEmpty();
     }
 
 }

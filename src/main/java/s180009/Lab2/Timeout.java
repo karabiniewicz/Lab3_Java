@@ -17,7 +17,9 @@ public class Timeout implements Runnable {
     @Singular
     private List<Thread> threads;
 
-    private Object controlObject;
+    private Thread inputThread;
+
+    private Object controlObject, controlObject2;
 
     @Override
     public void run() {
@@ -25,6 +27,13 @@ public class Timeout implements Runnable {
             try {
                 System.out.println("Waiting for inputs:");
                 controlObject.wait();
+            } catch (InterruptedException ex) {
+            }
+        }
+        synchronized (controlObject2) {
+            try {
+                System.out.println("Waiting for tasks");
+                controlObject2.wait();
                 System.out.println("Ending program");
             } catch (InterruptedException ex) {
             }
@@ -40,6 +49,6 @@ public class Timeout implements Runnable {
                 ex.printStackTrace();
             }
         }
+        inputThread.interrupt();
     }
-
 }

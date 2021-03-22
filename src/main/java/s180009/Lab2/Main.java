@@ -1,7 +1,5 @@
 package s180009.Lab2;
 
-import java.util.logging.Level;
-
 public class Main {
     private static int threadNumber;
 
@@ -9,9 +7,8 @@ public class Main {
         if (args.length > 0 && !args[0].isEmpty()) {
             threadNumber = Integer.parseInt(args[0]);
         }
-        TaskResults taskResults = new TaskResults();
 
-        TaskService taskService = new TaskService(taskResults, threadNumber);
+        TaskService taskService = new TaskService(threadNumber);
 
         System.out.println("Starting new session");
         try {
@@ -20,8 +17,5 @@ public class Main {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-
-        new ExportData().write(taskResults);
-
     }
 }
